@@ -42,6 +42,23 @@ void sortFScore(DynamicArray<NodeGraph::Node*>& nodes)
 	}
 }
 
+void sortGScore(DynamicArray<NodeGraph::Node*>& nodes)
+{
+	NodeGraph::Node* key = nullptr;
+	int j = 0;
+
+	for (int i = 1; i < nodes.getLength(); i++) {
+		key = nodes[i];
+		j = i - 1;
+		while (j >= 0 && nodes[j]->gScore > key->gScore) {
+			nodes[j + 1] = nodes[j];
+			j--;
+		}
+
+		nodes[j + 1] = key;
+	}
+}
+
 DynamicArray<NodeGraph::Node*> NodeGraph::findPath(Node* start, Node* goal)
 {
 	//Insert algorithm here
@@ -51,6 +68,7 @@ DynamicArray<NodeGraph::Node*> NodeGraph::findPath(Node* start, Node* goal)
 	openList.addItem(start);
 	while (openList.getLength() > 0)
 	{
+		sortGScore(openList);
 		for (int i = 0; i < openList[0]->edges.getLength(); i++)
 		{
 			NodeGraph::Node* targetNode = openList[0]->edges[i].target;
