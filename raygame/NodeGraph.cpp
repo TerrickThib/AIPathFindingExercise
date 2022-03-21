@@ -59,6 +59,23 @@ void sortGScore(DynamicArray<NodeGraph::Node*>& nodes)
 	}
 }
 
+void sortHScore(DynamicArray<NodeGraph::Node*>& nodes)
+{
+	NodeGraph::Node* key = nullptr;
+	int j = 0;
+
+	for (int i = 1; i < nodes.getLength(); i++) {
+		key = nodes[i];
+		j = i - 1;
+		while (j >= 0 && nodes[j]->hScore > key->hScore) {
+			nodes[j + 1] = nodes[j];
+			j--;
+		}
+
+		nodes[j + 1] = key;
+	}
+}
+
 DynamicArray<NodeGraph::Node*> NodeGraph::findPath(Node* start, Node* goal)
 {
 	resetGraphScore(start);
@@ -86,7 +103,7 @@ DynamicArray<NodeGraph::Node*> NodeGraph::findPath(Node* start, Node* goal)
 				targetNode->gScore = openList[0]->gScore + openList[0]->edges[i].cost;//Add gscore for the cost to the edges
 				targetNode->previous = openList[0]; 
 				openList.addItem(targetNode);//Adds item to open list
-				targetNode->color = 0xFF0000FF;
+				targetNode->color = 0xFF00FFFF;
 			}
 		}
 		closedList.addItem(openList[0]);
