@@ -61,6 +61,7 @@ void sortGScore(DynamicArray<NodeGraph::Node*>& nodes)
 
 DynamicArray<NodeGraph::Node*> NodeGraph::findPath(Node* start, Node* goal)
 {
+	resetGraphScore(start);
 	//Insert algorithm here
 	DynamicArray<Node*> openList = DynamicArray<Node*>();
 	DynamicArray<Node*> closedList = DynamicArray<Node*>();
@@ -69,6 +70,13 @@ DynamicArray<NodeGraph::Node*> NodeGraph::findPath(Node* start, Node* goal)
 	while (openList.getLength() > 0)
 	{
 		sortGScore(openList);
+
+		NodeGraph::Node* m_currentNode = openList[0];
+		if (m_currentNode == goal)
+		{
+			return reconstructPath(start, goal);
+		}
+
 		for (int i = 0; i < openList[0]->edges.getLength(); i++)
 		{
 			NodeGraph::Node* targetNode = openList[0]->edges[i].target;
@@ -78,13 +86,14 @@ DynamicArray<NodeGraph::Node*> NodeGraph::findPath(Node* start, Node* goal)
 				targetNode->gScore = openList[0]->gScore + openList[0]->edges[i].cost;//Add gscore for the cost to the edges
 				targetNode->previous = openList[0]; 
 				openList.addItem(targetNode);//Adds item to open list
+				targetNode->color = 0xFF0000FF;
 			}
 		}
 		closedList.addItem(openList[0]);
 		openList.remove(openList[0]);
+
 	}
 
-	return reconstructPath(start, goal);
 }
 
 void NodeGraph::drawGraph(Node* start)
